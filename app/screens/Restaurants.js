@@ -3,7 +3,7 @@ import { View, Text, StyleSheet } from "react-native";
 
 export default function Restaurants() {
   return (
-    <View style={styles}>
+    <View style={styles.container}>
       <Text>Restaurants</Text>
     </View>
   );
