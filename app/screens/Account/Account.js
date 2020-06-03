@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import { Text, StyleSheet } from "react-native";
 import * as firebase from "firebase";
+import Loading from "../../components/Loading";
 import UserGuest from "./UserGuest";
 import UserLogged from "./UserLogged";
 
@@ -19,7 +20,7 @@ export default function Acount() {
     });
   }, []);
 
-  if (login === null) return <Text>Cargando...</Text>;
+  if (login === null) return <Loading isVisible={true} text="Cargando..." />; //<Text style={styles.container}>Cargando...</Text>;
 
   return login ? <UserLogged /> : <UserGuest />;
 
@@ -30,11 +31,11 @@ export default function Acount() {
   );*/
 }
 
-/*const styles = StyleSheet.create({
+const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
-});*/
+});
