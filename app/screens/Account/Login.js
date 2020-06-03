@@ -60,6 +60,6 @@ const styles = StyleSheet.create({
   },
   divider: {
     backgroundColor: "#00a680",
-    margin: 40,
+    margin: 70,
   },
 });
