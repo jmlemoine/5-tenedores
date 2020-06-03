@@ -1,10 +1,10 @@
 import React from "react";
 import { View, Text, StyleSheet } from "react-native";
 
-export default function Acount() {
+export default function UserGuest() {
   return (
     <View style={styles.container}>
-      <Text>Account</Text>
+      <Text>UserGuest</Text>
     </View>
   );
 }
