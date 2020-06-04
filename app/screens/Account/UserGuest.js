@@ -15,7 +15,7 @@ export default function UserGuest() {
         resizeMode="contain"
       />
       <Text style={styles.title}>Consulta tu perfil</Text>
-      <Text style={styles}>
+      <Text style={styles.container}>
         Cómo podrías evaluar el mejor restarante? Busca los mejores restaurantes
         de una forma sencilla, vota cuál te ha gustado más y comenta tu
         experiencia
