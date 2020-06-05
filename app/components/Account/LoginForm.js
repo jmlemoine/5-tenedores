@@ -1,13 +1,33 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Input, Icon, Button } from "react-native-elements";
+import { isEmpty } from "lodash";
+import { validateEmail } from "../../utils/validations";
 
-export default function LoginForm() {
+export default function LoginForm(props) {
+  const { toastRef } = props;
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState(defaultFormValue);
+
+  const onChange = (e, type) => {
+    setFormData({ ...formData, [type]: e.nativeEvent.text });
+  };
+
+  const onSubmit = () => {
+    if (isEmpty(formData.email) || isEmpty(formData.password)) {
+      toastRef.current.show("Todos los campos deben ser obligatorios.");
+    } else if (!validateEmail(formData.email)) {
+      toastRef.current.show("El email no es correcto.");
+    } else {
+      console.log("BIEN");
+    }
+  };
+
   return (
     <View style={styles.formContainer}>
       <Input
         placeholder="Correo Electrónico"
+        onChange={(e) => onChange(e, "email")}
         containerStyle={styles.inputForm}
         rightIcon={
           <Icon
@@ -19,6 +39,7 @@ export default function LoginForm() {
       />
       <Input
         placeholder="Contraseña"
+        onChange={(e) => onChange(e, "password")}
         containerStyle={styles.inputForm}
         password={true}
         secureTextEntry={showPassword ? false : true}
@@ -35,9 +56,17 @@ export default function LoginForm() {
         title="Login"
         containerStyle={styles.btnContainerLogin}
         buttonStyle={styles.btnLogin}
+        onPress={onSubmit}
       />
     </View>
   );
+}
+
+function defaultFormValue() {
+  return {
+    email: "",
+    password: "",
+  };
 }
 
 const styles = StyleSheet.create({
