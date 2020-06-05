@@ -14,7 +14,6 @@ export default function RegisterForm(props) {
   const [formData, setFormData] = useState(defaultFormValue());
   const [loading, setLoading] = useState(false);
   const navigation = useNavigation();
-
   const onSubmit = () => {
     if (
       isEmpty(formData.email) ||
