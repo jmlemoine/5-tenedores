@@ -10,6 +10,8 @@ export default function InfoUser(props) {
     toastRef,
   } = props;
 
+  console.log(props.userInfo);
+
   const changeAvatar = async () => {
     const resultPermission = await Permissions.askAsync(
       Permissions.CAMERA_ROLL
@@ -30,7 +32,8 @@ export default function InfoUser(props) {
       } else {
         uploadImage(result.uri)
           .then(() => {
-            console.log("Imagen Subida.");
+            updatePhotoUrl();
+            //console.log("Imagen Subida.");
           })
           .catch(() => {
             toastRef.current.show("ERROR!");
@@ -51,6 +54,21 @@ export default function InfoUser(props) {
       .child("avatar/" + `${uid}`);
     return ref.put(blob);
     //console.log(JSON.stringify(blob));
+  };
+
+  const updatePhotoUrl = () => {
+    firebase
+      .storage()
+      .ref("avatar/" + `${uid}`)
+      .getDownloadURL()
+      .then(async (response) => {
+        //console.log(response);
+        const update = {
+          photoURL: response,
+        };
+        await firebase.auth().currentUser.updateProfile(update);
+        console.log("Imagen Actualizada");
+      });
   };
 
   return (
