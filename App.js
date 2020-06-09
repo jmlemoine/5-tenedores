@@ -1,7 +1,9 @@
 import React from "react";
-import { StyleSheet, Text, View } from "react-native";
+import { StyleSheet, Text, View, YellowBox } from "react-native";
 import Navigation from "./app/navigations/Navigation";
 import { firebaseApp } from "./app/utils/Firebase";
+
+YellowBox.ignoreWarnings(["Setting a Timer"]);
 
 export default function App() {
   /*useEffect(() => {
