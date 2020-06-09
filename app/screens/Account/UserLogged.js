@@ -1,5 +1,5 @@
-import React, { useRef, useState, useEffect } from "react";
-import { View, Text, StyleSheet } from "react-native";
+import React, { useState, useEffect, useRef } from "react";
+import { StyleSheet, View, Text } from "react-native";
 import { Button } from "react-native-elements";
 import Toast from "react-native-easy-toast";
 import * as firebase from "firebase";
@@ -10,6 +10,7 @@ export default function UserLogged() {
   const [userInfo, setUserInfo] = useState(null);
   const [loading, setLoading] = useState(false);
   const [loadingText, setLoadingText] = useState("");
+  const [realoadUserInfo, setRealoadUserInfo] = useState(false);
   const toastRef = useRef();
 
   useEffect(() => {
@@ -17,10 +18,11 @@ export default function UserLogged() {
       const user = await firebase.auth().currentUser;
       setUserInfo(user);
     })();
-  }, []);
+    setRealoadUserInfo(false);
+  }, [realoadUserInfo]);
 
   return (
-    <View style={styles.container}>
+    <View style={styles.viewUserInfo}>
       {userInfo && (
         <InfoUser
           userInfo={userInfo}
@@ -30,12 +32,10 @@ export default function UserLogged() {
         />
       )}
 
-      <Text>Account Options</Text>
       <Button
-        containerStyle={styles.btnContainer}
-        buttonStyle={styles.btnLogout}
-        title="Cerrar Sesión"
-        titleStyle={styles.btnLogoutText}
+        title="Cerrar sesión"
+        buttonStyle={styles.btnCloseSession}
+        titleStyle={styles.btnCloseSessionText}
         onPress={() => firebase.auth().signOut()}
       />
       <Toast ref={toastRef} position="center" opacity={0.9} />
@@ -45,20 +45,14 @@ export default function UserLogged() {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    alignItems: "center",
-    justifyContent: "center",
+  viewUserInfo: {
+    minHeight: "100%",
+    backgroundColor: "#f2f2f2",
   },
-  btnContainer: {
-    marginTop: 50,
-    width: "95%",
-  },
-  btnLogout: {
-    backgroundColor: "#fff",
+  btnCloseSession: {
     marginTop: 30,
     borderRadius: 0,
+    backgroundColor: "#fff",
     borderTopWidth: 1,
     borderTopColor: "#e3e3e3",
     borderBottomWidth: 1,
@@ -66,11 +60,7 @@ const styles = StyleSheet.create({
     paddingTop: 10,
     paddingBottom: 10,
   },
-  viewUserInfo: {
-    minHeight: "100%",
-    backgroundColor: "#f2f2f2",
-  },
-  btnLogoutText: {
+  btnCloseSessionText: {
     color: "#00a680",
   },
 });
