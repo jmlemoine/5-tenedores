@@ -4,7 +4,7 @@ import { ListItem } from "react-native-elements";
 import { map } from "lodash";
 import Modal from "../Modal";
 import ChangeDisplayNameForm from "./ChangeDisplayNameForm";
-import ChangeEmailForm from "./ChangeEmailForm";
+import ChangeEmailF from "./ChangeEmailForm";
 
 export default function AccountOptions(props) {
   const { userInfo, toastRef, setRealoadUserInfo } = props;
@@ -30,7 +30,7 @@ export default function AccountOptions(props) {
         break;
       case "email":
         setRenderComponent(
-          <ChangeEmailForm
+          <ChangeEmailF
             email={userInfo.email}
             setShowModal={setShowModal}
             toastRef={toastRef}
