@@ -1,20 +1,40 @@
 import React, { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Input, Button } from "react-native-elements";
+import { validateEmail } from "../../utils/validations";
 
 export default function ChangeEmailForm(props) {
   const { email, setShowModal, toastRef, setReloadUserInfo } = props;
   const [formData, setFormData] = useState(defaultValue());
   const [showPassword, setShowPassword] = useState(false);
 
+  const [errors, setErrors] = useState({});
+
   const onChange = (e, type) => {
     setFormData({ ...formData, [type]: e.nativeEvent.text });
   };
 
   const onSubmit = () => {
-    console.log("Formulario Enviado");
-    console.log(formData);
+    setErrors({});
+    if (!formData.email || email === formData.email) {
+      setErrors({
+        email: "El email no ha cambiado",
+      });
+    } else if (!validateEmail(formData.email)) {
+      setErrors({
+        email: "El email es incorrecto",
+      });
+    } else if (!formData.password) {
+      setErrors({
+        password: "La contraseña no puede estar vacía",
+      });
+    } else {
+      console.log("OK");
+    }
   };
+  /*console.log("Formulario Enviado");
+  console.log(formData);*/
+
   return (
     <View style={styles.view}>
       <Input
@@ -27,6 +47,7 @@ export default function ChangeEmailForm(props) {
           color: "#c2c2c2",
         }}
         onChange={(e) => onChange(e, "email")}
+        errorMessage={errors.email}
       />
       <Input
         placeholder="Contraseña"
@@ -41,6 +62,7 @@ export default function ChangeEmailForm(props) {
           onPress: () => setShowPassword(!showPassword),
         }}
         onChange={(e) => onChange(e, "password")}
+        errorMessage={errors.password}
       />
       <Button
         title="Cambiar Correo Electrónico"
