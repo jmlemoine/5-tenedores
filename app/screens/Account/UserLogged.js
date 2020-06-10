@@ -33,7 +33,11 @@ export default function UserLogged() {
         />
       )}
 
-      <AccountOptions userInfo={userInfo} toastRef={toastRef} />
+      <AccountOptions
+        userInfo={userInfo}
+        toastRef={toastRef}
+        setRealoadUserInfo={setRealoadUserInfo}
+      />
 
       <Button
         title="Cerrar sesión"
