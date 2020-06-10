@@ -6,13 +6,32 @@ import Modal from "../Modal";
 
 export default function AccountOptions(props) {
   const { userInfo, toastRef } = props;
-  const [showModal, setShowModal] = useState(true);
+  const [showModal, setShowModal] = useState(false);
+  const [renderComponent, setRenderComponent] = useState(null);
 
   //console.log(menuOptions);
 
   const selectComponent = (key) => {
-    console.log("Click!");
-    console.log(key);
+    /*console.log("Click!");
+    console.log(key);*/
+    switch (key) {
+      case "displayName":
+        setRenderComponent(<Text>Cambiando Nombre y Apellido</Text>);
+        setShowModal(true);
+        break;
+      case "email":
+        setRenderComponent(<Text>Cambiar Correo Electrónico</Text>);
+        setShowModal(true);
+        break;
+      case "password":
+        setRenderComponent(<Text>Cambiar Contraseña</Text>);
+        setShowModal(true);
+        break;
+      default:
+        setRenderComponent(null);
+        setShowModal(false);
+        break;
+    }
   };
 
   const menuOptions = generateOptions(selectComponent);
@@ -37,9 +56,11 @@ export default function AccountOptions(props) {
           onPress={menu.onPress}
         />
       ))}
-      <Modal isVisible={showModal} setIsVisible={setShowModal}>
-        <Text>Hola a Todos</Text>
-      </Modal>
+      {renderComponent && (
+        <Modal isVisible={showModal} setIsVisible={setShowModal}>
+          {renderComponent}
+        </Modal>
+      )}
     </View>
   );
 }
