@@ -4,6 +4,18 @@ import { Input, Button } from "react-native-elements";
 
 export default function ChangePasswordForm() {
   const [showPassword, setShowPassword] = useState(false);
+  const [formData, setFormData] = useState(defaultValue);
+
+  const onChange = (e, type) => {
+    //console.log(e.nativeEvent.text);
+    //console.log(type);
+    setFormData({ ...formData, [type]: e.nativeEvent.text });
+  };
+
+  const onSubmit = () => {
+    console.log(formData);
+  };
+
   return (
     <View style={styles.view}>
       <Input
@@ -17,6 +29,7 @@ export default function ChangePasswordForm() {
           color: "#c2c2c2",
           onPress: () => setShowPassword(!showPassword),
         }}
+        onChange={(e) => onChange(e, "password")}
       />
       <Input
         placeholder="Contraseña Nueva"
@@ -29,6 +42,7 @@ export default function ChangePasswordForm() {
           color: "#c2c2c2",
           onPress: () => setShowPassword(!showPassword),
         }}
+        onChange={(e) => onChange(e, "newPassword")}
       />
       <Input
         placeholder="Repetir Nueva Contraseña"
@@ -40,14 +54,24 @@ export default function ChangePasswordForm() {
           name: showPassword ? "eye-off-outline" : "eye-outline",
           color: "#c2c2c2",
         }}
+        onChange={(e) => onChange(e, "repeatNewPassword")}
       />
       <Button
         title="Cambiar Contraseña"
         containerStyle={styles.btnContainer}
         buttonStyle={styles.btn}
+        onPress={onSubmit}
       />
     </View>
   );
+}
+
+function defaultValue() {
+  return {
+    password: "",
+    newPassword: "",
+    repeatNewPassword: "",
+  };
 }
 
 const styles = StyleSheet.create({
