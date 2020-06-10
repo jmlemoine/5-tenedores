@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { Input, Button } from "react-native-elements";
+import { size } from "lodash";
 
 export default function ChangePasswordForm() {
   const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(defaultValue);
+  const [errors, setErrors] = useState({});
 
   const onChange = (e, type) => {
     //console.log(e.nativeEvent.text);
@@ -13,7 +15,38 @@ export default function ChangePasswordForm() {
   };
 
   const onSubmit = () => {
-    console.log(formData);
+    let errorsTemp = {};
+    setErrors({});
+
+    if (
+      !formData.password ||
+      !formData.newPassword ||
+      !formData.repeatNewPassword
+    ) {
+      errorsTemp = {
+        password: !formData.password ? "La contraseña no debe estar vacía" : "",
+        newPassword: !formData.newPassword
+          ? "La contraseña no debe estar vacía"
+          : "",
+        repeatNewPassword: !formData.repeatNewPassword
+          ? "La contraseña no debe estar vacía"
+          : "",
+      };
+    } else if (formData.newPassword !== formData.repeatNewPassword) {
+      errorsTemp = {
+        newPassword: "Las contraseñas deben ser iguales",
+        repeatNewPassword: "Las contraseñas deben ser iguales",
+      };
+    } else if (size(formData.newPassword) < 6) {
+      errorsTemp = {
+        newPassword: "La contraseña debe tener mayor a 5 caracteres",
+        repeatNewPassword: "La contraseña debe tener mayor a 5 caracteres",
+      };
+    } else {
+      console.log("OK");
+    }
+    setErrors(errorsTemp);
+    //console.log(formData);
   };
 
   return (
@@ -30,6 +63,7 @@ export default function ChangePasswordForm() {
           onPress: () => setShowPassword(!showPassword),
         }}
         onChange={(e) => onChange(e, "password")}
+        errorMessage={errors.password}
       />
       <Input
         placeholder="Contraseña Nueva"
@@ -43,6 +77,7 @@ export default function ChangePasswordForm() {
           onPress: () => setShowPassword(!showPassword),
         }}
         onChange={(e) => onChange(e, "newPassword")}
+        errorMessage={errors.newPassword}
       />
       <Input
         placeholder="Repetir Nueva Contraseña"
@@ -55,6 +90,7 @@ export default function ChangePasswordForm() {
           color: "#c2c2c2",
         }}
         onChange={(e) => onChange(e, "repeatNewPassword")}
+        errorMessage={errors.repeatNewPassword}
       />
       <Button
         title="Cambiar Contraseña"
