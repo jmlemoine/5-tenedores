@@ -3,7 +3,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import { Icon } from "react-native-elements";
 
-import Restaurants from "../screens/Restaurants";
+import Restaurants from "../screens/Restaurants/Restaurants";
 import Favorites from "../screens/Favorites";
 import TopRestaurants from "../screens/TopRestaurants";
 import Search from "../screens/Search";
