@@ -27,12 +27,21 @@ export default function AddRestaurantForm(props) {
   const [locationRestaurant, setLocationRestaurant] = useState(null);
 
   const addRestaurant = () => {
-    console.log("OK");
-    /*console.log("Restaurant Name: " + restaurantName);
-    console.log("Restaurant Address: " + restaurantAddress);
-    console.log("Restaurant Description: " + restaurantDescription);*/
-    console.log(imagesSelected);
-    console.log(locationRestaurant);
+    if (!restaurantName || !restaurantAddress || !restaurantDescription) {
+      toastRef.current.show(
+        "Debe llenar todos los campos para crear el restaurante"
+      );
+    } else if (size(imagesSelected) === 0) {
+      toastRef.current.show(
+        "El restaurante debe tener por lo menos una imagen."
+      );
+    } else if (!locationRestaurant) {
+      toastRef.current.show(
+        "Debes poner la ubicación del restaurante en el mapa."
+      );
+    } else {
+      console.log("OK");
+    }
   };
 
   return (
