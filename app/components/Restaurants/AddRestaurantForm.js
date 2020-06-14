@@ -52,6 +52,7 @@ export default function AddRestaurantForm(props) {
         setRestaurantAddress={setRestaurantAddress}
         setRestaurantDescription={setRestaurantDescription}
         setIsVisibleMap={setIsVisibleMap}
+        locationRestaurant={locationRestaurant}
       />
       <UploadImage
         toastRef={toastRef}
@@ -95,6 +96,7 @@ function FormAdd(props) {
     setRestaurantAddress,
     setRestaurantDescription,
     setIsVisibleMap,
+    locationRestaurant,
   } = props;
   return (
     <View style={styles.viewForm}>
@@ -110,7 +112,7 @@ function FormAdd(props) {
         rightIcon={{
           type: "material-community",
           name: "google-maps",
-          color: "#c2c2c2",
+          color: locationRestaurant ? "#00a680" : "#c2c2c2",
           onPress: () => setIsVisibleMap(true),
         }}
       />
