@@ -14,6 +14,9 @@ import { map, size, filter } from "lodash";
 import * as Location from "expo-location";
 import Modal from "../Modal";
 import MapView from "react-native-maps";
+import { firebaseApp } from "../../utils/Firebase";
+import firebase from "firebase/app";
+import "firebase/storage";
 
 const widthScreen = Dimensions.get("window").width;
 
@@ -41,7 +44,19 @@ export default function AddRestaurantForm(props) {
       );
     } else {
       console.log("OK");
+      uploadImageStorage();
     }
+  };
+
+  const uploadImageStorage = async () => {
+    console.log(imagesSelected);
+    const imageBlob = [];
+
+    map(imagesSelected, async (image) => {
+      const response = await fetch(image);
+      const blob = await response.blob();
+      const ref = firebase.storage().ref("restaurants").child();
+    });
   };
 
   return (
