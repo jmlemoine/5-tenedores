@@ -17,6 +17,7 @@ import MapView from "react-native-maps";
 import { firebaseApp } from "../../utils/Firebase";
 import firebase from "firebase/app";
 import "firebase/storage";
+import uuid from "random-uuid-v4";
 
 const widthScreen = Dimensions.get("window").width;
 
@@ -43,8 +44,11 @@ export default function AddRestaurantForm(props) {
         "Debes poner la ubicación del restaurante en el mapa."
       );
     } else {
-      console.log("OK");
-      uploadImageStorage();
+      setIsLoading(true);
+      uploadImageStorage().then((response) => {
+        console.log(response);
+        setIsLoading(false);
+      });
     }
   };
 
@@ -52,11 +56,25 @@ export default function AddRestaurantForm(props) {
     console.log(imagesSelected);
     const imageBlob = [];
 
-    map(imagesSelected, async (image) => {
-      const response = await fetch(image);
-      const blob = await response.blob();
-      const ref = firebase.storage().ref("restaurants").child();
-    });
+    await Promise.all(
+      map(imagesSelected, async (image) => {
+        const response = await fetch(image);
+        const blob = await response.blob();
+        const ref = firebase.storage().ref("restaurants").child(uuid());
+        await ref.put(blob).then(async (result) => {
+          await firebase
+            .storage()
+            .ref(`restaurants/${result.metadata.name}`)
+            .getDownloadURL()
+            .then((photoUrl) => {
+              imageBlob.push(photoUrl);
+            });
+          //console.log("OK");
+        });
+      })
+    );
+
+    return imageBlob;
   };
 
   return (
