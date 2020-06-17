@@ -35,21 +35,14 @@ export default function AddRestaurantForm(props) {
 
   const addRestaurant = () => {
     if (!restaurantName || !restaurantAddress || !restaurantDescription) {
-      toastRef.current.show(
-        "Debe llenar todos los campos para crear el restaurante"
-      );
+      toastRef.current.show("Todos los campos del formulario son obligatorios");
     } else if (size(imagesSelected) === 0) {
-      toastRef.current.show(
-        "El restaurante debe tener por lo menos una imagen."
-      );
+      toastRef.current.show("El restaurante tiene que tener almenos una foto");
     } else if (!locationRestaurant) {
-      toastRef.current.show(
-        "Debes poner la ubicación del restaurante en el mapa."
-      );
+      toastRef.current.show("Tienes que localizar el restaurnate en el mapa");
     } else {
       setIsLoading(true);
       uploadImageStorage().then((response) => {
-        setIsLoading(false);
         db.collection("restaurants")
           .add({
             name: restaurantName,
@@ -61,7 +54,7 @@ export default function AddRestaurantForm(props) {
             ratingTotal: 0,
             quantityVoting: 0,
             createAt: new Date(),
-            createBy: firebaseApp.auth().currentUser.uid,
+            createBy: firebase.auth().currentUser.uid,
           })
           .then(() => {
             setIsLoading(false);
@@ -70,7 +63,7 @@ export default function AddRestaurantForm(props) {
           .catch(() => {
             setIsLoading(false);
             toastRef.current.show(
-              "Error al crear el restaurante, trate otra vez más tarde."
+              "Error al subir el restaurante, intentelo más tarde"
             );
           });
       });
@@ -78,7 +71,6 @@ export default function AddRestaurantForm(props) {
   };
 
   const uploadImageStorage = async () => {
-    console.log(imagesSelected);
     const imageBlob = [];
 
     await Promise.all(
@@ -94,7 +86,6 @@ export default function AddRestaurantForm(props) {
             .then((photoUrl) => {
               imageBlob.push(photoUrl);
             });
-          //console.log("OK");
         });
       })
     );
@@ -134,6 +125,7 @@ export default function AddRestaurantForm(props) {
 
 function ImageRestaurant(props) {
   const { imagenRestaurant } = props;
+
   return (
     <View style={styles.viewPhoto}>
       <Image
@@ -156,15 +148,16 @@ function FormAdd(props) {
     setIsVisibleMap,
     locationRestaurant,
   } = props;
+
   return (
     <View style={styles.viewForm}>
       <Input
-        placeholder="Nombre del Restaurante"
+        placeholder="Nombre del restaurante"
         containerStyle={styles.input}
         onChange={(e) => setRestaurantName(e.nativeEvent.text)}
       />
       <Input
-        placeholder="Dirección del Restaurante"
+        placeholder="Dirección"
         containerStyle={styles.input}
         onChange={(e) => setRestaurantAddress(e.nativeEvent.text)}
         rightIcon={{
@@ -175,7 +168,7 @@ function FormAdd(props) {
         }}
       />
       <Input
-        placeholder="Descripción del Restaurante"
+        placeholder="Descripcion del restaurante"
         multiline={true}
         inputContainerStyle={styles.textArea}
         onChange={(e) => setRestaurantDescription(e.nativeEvent.text)}
@@ -192,15 +185,17 @@ function Map(props) {
     toastRef,
   } = props;
   const [location, setLocation] = useState(null);
+
   useEffect(() => {
     (async () => {
       const resultPermissions = await Permissions.askAsync(
         Permissions.LOCATION
       );
       const statusPermissions = resultPermissions.permissions.location.status;
+
       if (statusPermissions !== "granted") {
         toastRef.current.show(
-          "Necesitas aceptar los permisos de ubicación",
+          "Tienes que aceptar los permisos de localizacion para crear un restaurante",
           3000
         );
       } else {
@@ -212,13 +207,12 @@ function Map(props) {
           longitudeDelta: 0.001,
         });
       }
-      //console.log(resultPermissions);
     })();
   }, []);
 
   const confirmLocation = () => {
     setLocationRestaurant(location);
-    toastRef.current.show("Ubicación guardada");
+    toastRef.current.show("Localizacion guardada correctamente");
     setIsVisibleMap(false);
   };
 
@@ -243,13 +237,13 @@ function Map(props) {
         )}
         <View style={styles.viewMapBtn}>
           <Button
-            title="Guardar Ubicación"
+            title="Guardar Ubicacion"
             containerStyle={styles.viewMapBtnContainerSave}
             buttonStyle={styles.viewMapBtnSave}
             onPress={confirmLocation}
           />
           <Button
-            title="Cancelar Ubicación"
+            title="Cancelar Ubicacion"
             containerStyle={styles.viewMapBtnContainerCancel}
             buttonStyle={styles.viewMapBtnCancel}
             onPress={() => setIsVisibleMap(false)}
@@ -262,6 +256,7 @@ function Map(props) {
 
 function UploadImage(props) {
   const { toastRef, imagesSelected, setImagesSelected } = props;
+
   const imageSelect = async () => {
     const resultPermissions = await Permissions.askAsync(
       Permissions.CAMERA_ROLL
@@ -277,10 +272,10 @@ function UploadImage(props) {
         allowsEditing: true,
         aspect: [4, 3],
       });
-      console.log(result);
+
       if (result.cancelled) {
         toastRef.current.show(
-          "Has cerrado la galería sin elegir una imagen",
+          "Has cerrado la galeria sin seleccionar ninguna imagen",
           2000
         );
       } else {
@@ -292,9 +287,12 @@ function UploadImage(props) {
   const removeImage = (image) => {
     Alert.alert(
       "Eliminar Imagen",
-      "Estás seguro de eliminar la imagen?",
+      "¿Estas seguro de que quieres eliminar la imagen?",
       [
-        { text: "Cancel", style: "cancel" },
+        {
+          text: "Cancel",
+          style: "cancel",
+        },
         {
           text: "Eliminar",
           onPress: () => {
@@ -309,7 +307,7 @@ function UploadImage(props) {
   };
 
   return (
-    <View style={styles.viewImage}>
+    <View style={styles.viewImages}>
       {size(imagesSelected) < 4 && (
         <Icon
           type="material-community"
@@ -319,7 +317,6 @@ function UploadImage(props) {
           onPress={imageSelect}
         />
       )}
-
       {map(imagesSelected, (imageRestaurant, index) => (
         <Avatar
           key={index}
@@ -327,7 +324,6 @@ function UploadImage(props) {
           source={{ uri: imageRestaurant }}
           onPress={() => removeImage(imageRestaurant)}
         />
-        //<Icon type="material-community" name="camera" />
       ))}
     </View>
   );
@@ -354,7 +350,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#00a680",
     margin: 20,
   },
-  viewImage: {
+  viewImages: {
     flexDirection: "row",
     marginLeft: 20,
     marginRight: 20,
@@ -385,7 +381,7 @@ const styles = StyleSheet.create({
   viewMapBtn: {
     flexDirection: "row",
     justifyContent: "center",
-    marginBottom: 10,
+    marginTop: 10,
   },
   viewMapBtnContainerCancel: {
     paddingLeft: 5,

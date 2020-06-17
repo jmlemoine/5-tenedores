@@ -25,6 +25,12 @@
       "supportsTablet": false
     },
     "android": {
+      "package": "com.agustinnavarrogaldon.cincotenedores",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBCOO4S1goDpDEqQjY5c1eBd1nQIJnILgU"
+        }
+      },
       "permissions": [
         "CAMERA-ROLL",
         "READ_EXTERNAL_STORAGE",
